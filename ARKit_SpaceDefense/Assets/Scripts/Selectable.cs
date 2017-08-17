@@ -21,11 +21,8 @@ public class Selectable : MonoBehaviour, IPointerDownHandler
     
     public void OnPointerDown(PointerEventData eventData)
     {
-        GameObject newDraggableItem = Instantiate<GameObject>(draggableItem);
+        GameObject newDraggableItem = Instantiate(draggableItem);
 
-        DragBehaviour dragBehaviour = newDraggableItem.GetComponent<DragBehaviour>();
-        dragBehaviour.StartDragging(eventData.pointerId, dragCamera);
-
-        Debug.Log("ONPointerDown");
+        newDraggableItem.GetComponent<DragBehaviour>().StartDragging(eventData.pointerId, dragCamera);
     }
 }
