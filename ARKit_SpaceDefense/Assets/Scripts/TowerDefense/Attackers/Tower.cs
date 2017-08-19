@@ -9,26 +9,7 @@ public class Tower : MonoBehaviour
 
     private List<Attacker> attackers = new List<Attacker>();
 
-    private void OnTriggerEnter(Collider collider)
-    {
-        Attacker attacker = collider.GetComponent<Attacker>();
-
-        attackers.Add(attacker);
-
-        attacker.OnDead += Attacker_OnDead;
-    }
-
-    private void OnTriggerExit(Collider collider)
-    {
-        Attacker attacker = collider.GetComponent<Attacker>();
-
-        attackers.Remove(attacker);
-    }
     
-    private void Attacker_OnDead(Attacker attacker)
-    {
-        attackers.Remove(attacker);
-    }
 
     private void Update()
     {
