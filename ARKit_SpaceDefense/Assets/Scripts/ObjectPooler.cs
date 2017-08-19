@@ -3,23 +3,27 @@ using UnityEngine;
 
 public class ObjectPooler : MonoBehaviour
 {
-    public GameObject pooledObject;
-    public int pooledAmount = 20;
-    public bool willGrow = true;
+    private GameObject pooledObject;
+    private int pooledAmount;
+    private bool isGrowing;
     
-    List<GameObject> pooledObjects;
+    private List<GameObject> pooledObjects;
 
-    private void Start()
+    public void Initialize(GameObject newPooledObject, int pooledNum = 20, bool allowGrow = true)
     {
+        pooledObject = newPooledObject;
+        pooledAmount = pooledNum;
+        isGrowing = allowGrow;
+
         pooledObjects = new List<GameObject>();
-        for(int i = 0; i < pooledAmount; i++)
+        for (int i = 0; i < pooledAmount; i++)
         {
             GameObject obj = Instantiate(pooledObject);
             obj.SetActive(false);
             pooledObjects.Add(obj);
         }
     }
-
+    
     public GameObject GetPooledObject()
     {
         for(int i = 0; i < pooledObjects.Count; i++)
@@ -30,7 +34,7 @@ public class ObjectPooler : MonoBehaviour
             }
         }
 
-        if(willGrow)
+        if(isGrowing)
         {
             GameObject obj = Instantiate(pooledObject);
             obj.SetActive(false);

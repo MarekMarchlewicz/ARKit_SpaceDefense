@@ -68,7 +68,7 @@ public class GameManager : MonoBehaviour
 
     private void UpdateWait()
     {
-        Debug.Log((waitingTime - Time.time - timer).ToString());
+        //Debug.Log((waitingTime - Time.time - timer).ToString());
 
         if(Time.time - timer > waitingTime)
         {

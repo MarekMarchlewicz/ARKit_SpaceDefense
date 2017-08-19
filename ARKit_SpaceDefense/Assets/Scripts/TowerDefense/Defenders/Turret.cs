@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Playables;
 
 public enum TurretState
 {
@@ -7,10 +9,10 @@ public enum TurretState
     Ready
 }
 
+[RequireComponent(typeof(SphereCollider))]
 public class Turret : MonoBehaviour
 {
-    [SerializeField]
-    private Transform target;                   //The runner's transform
+    [Header("Shooting")]
 
     [SerializeField]
     private Transform turretRotator;            //The transform of the turret that handles turning the gun
@@ -19,49 +21,129 @@ public class Turret : MonoBehaviour
     private Transform turrentGunArm;            //The transform of the turret that handles looking up and down
 
     [SerializeField]
-    private Transform turrentGunArmCentre;      //The transform of gun arm's centre
+    private Transform turretBarrel;      //The transform of gun's barrel
 
     [SerializeField]
     private float turretRotationSpeed = 5f;     //How fast the turret rotates
 
-    [SerializeField]
-    private float poweredDownAngle = 25f;       //How far down does the turret look when unpowered
+    [Header("Shooting")]
 
-    private AudioSource audioSource;                            //Reference to audio source component
-    private bool isPowered = true;                              //Is the turret currently powered?
-    //TurretShooting turretShooting;                      //Reference to the TurretShooting script on the barrel of the gun
+    [SerializeField, Range(1, 30)]
+    private float shotsPerSecond = 1f;
+
+    [SerializeField]
+    private GameObject bulletPrefab;
+
+    [SerializeField]
+    private float bulletStartVelocity = 100f;
+
+    [SerializeField, Range(0, 360)]
+    private float aimPrecision = 25f;       
+    
+    private List<Attacker> attackers = new List<Attacker>();
+
+    private TurretState turretState = TurretState.Inactive;
+
+    private Transform target;
+
+    private ObjectPooler bulletPool;
+
+    private AudioSource audioSource;
+
+    private float lastTimeFired = 0f;
 
     private void Start()
     {
         audioSource = GetComponent<AudioSource>();
-        //turretShooting = GetComponentInChildren<TurretShooting>();
+
+        ActivateTurret();
+
+        bulletPool = gameObject.AddComponent<ObjectPooler>();
+        bulletPool.Initialize(bulletPrefab, 30, false);
+    }
+
+    private void ActivateTurret()
+    {
+        PlayableDirector timeline = GetComponent<PlayableDirector>();
+        timeline.Play();
+        Invoke("OnTimelineFinished", (float)timeline.playableAsset.duration);
+
+        turretState = TurretState.Activating;
+    }
+
+    private void OnTimelineFinished()
+    {
+        turretState = TurretState.Ready;
+    }
+
+    private void OnTriggerEnter(Collider collider)
+    {
+        Attacker attacker = collider.GetComponent<Attacker>();
+
+        if (attacker != null)
+        {
+            attackers.Add(attacker);
+
+            attacker.OnDead += Attacker_OnDead;
+        }
+    }
+
+    private void OnTriggerExit(Collider collider)
+    {
+        Attacker attacker = collider.GetComponent<Attacker>();
+
+        attackers.Remove(attacker);
+    }
+
+    private void Attacker_OnDead(Attacker attacker)
+    {
+        attackers.Remove(attacker);
     }
 
     private void Update()
     {
-        if (!isPowered)
+        if (turretState != TurretState.Ready)
             return;
+
+        if (attackers.Count == 0)
+            return;
+
+        target = attackers[0].transform;
 
         //Get the vector between the turret and the runner, calculate the rotation needed to "look at" it, and "Linerally Interpolate" from the current rotation to the desired one
         Vector3 targetRotation = Quaternion.LookRotation(target.position - turretRotator.position).eulerAngles;
-
-        Quaternion turretRotation = Quaternion.Euler(new Vector3(0f, targetRotation.y, 0f));
+        targetRotation.x = 0f;
+        targetRotation.z = 0f;
+        Quaternion turretRotation = Quaternion.Euler(targetRotation);
         turretRotator.localRotation = Quaternion.Lerp(turretRotator.localRotation, turretRotation, Time.deltaTime * turretRotationSpeed);
 
-        targetRotation = Quaternion.LookRotation(target.position - turrentGunArmCentre.position).eulerAngles;
-
-        Quaternion gunArmRotation = Quaternion.Euler(new Vector3(targetRotation.x, 0f, 0f));
+        targetRotation = Quaternion.LookRotation(target.position - turretBarrel.position).eulerAngles;
+        targetRotation.y = 0f;
+        Quaternion gunArmRotation = Quaternion.Euler(targetRotation);
         turrentGunArm.localRotation = Quaternion.Lerp(turrentGunArm.localRotation, gunArmRotation, Time.deltaTime * turretRotationSpeed);
+
+        float turretRotationDiff = Quaternion.Angle(turretRotation, turretRotator.localRotation);
+        float gunRotationDiff = Quaternion.Angle(gunArmRotation, turrentGunArm.localRotation);
+
+        if (turretRotationDiff < aimPrecision && gunRotationDiff < aimPrecision &&
+            Time.time - lastTimeFired > 1 / shotsPerSecond)
+        {
+            Fire();
+        }
     }
 
-    //Public method called by the TurretPowerMarker
-    public void TurnOff()
+    private void Fire()
     {
-        if (!isPowered)
-            return;
+        GameObject newBullet = bulletPool.GetPooledObject();
 
-        //Flag the turret as "off", disable the shooting capability, and begin rotating the gun downward
-        isPowered = false;
-        //turretShooting.enabled = false;
+        if(newBullet != null)
+        {
+            newBullet.transform.position = turretBarrel.position;
+            newBullet.transform.rotation = turretBarrel.rotation;
+            newBullet.GetComponent<Rigidbody>().velocity = newBullet.transform.forward * bulletStartVelocity;
+            newBullet.SetActive(true);
+
+            lastTimeFired = Time.time;
+        }
     }
 }
