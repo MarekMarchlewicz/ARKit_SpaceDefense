@@ -1,0 +1,131 @@
+fileFormatVersion: 2
+guid: 6750944f6e7662742965b30ed5eaeae4
+timeCreated: 1460452563
+licenseType: Store
+ModelImporter:
+  serializedVersion: 18
+  fileIDToRecycleName:
+    100000: //RootNode
+    100002: Ray
+    100004: Rig
+    100006: RigHead
+    100008: RigHeadGizmo
+    100010: RigLArm1
+    100012: RigLArm1Gizmo
+    100014: RigLArm2
+    100016: RigLArm2Gizmo
+    100018: RigLArmPalm
+    100020: RigLArmPalmGizmo
+    100022: RigLeg1
+    100024: RigLegPlatform
+    100026: RigPelvis
+    100028: RigPelvisGizmo
+    100030: RigRArm1
+    100032: RigRArm1Gizmo
+    100034: RigRArm2
+    100036: RigRArm2Gizmo
+    100038: RigRArmPalm
+    100040: RigRArmPalmGizmo
+    100042: RigSpine1
+    100044: RigSpine2
+    100046: RigWheel
+    100048: RigWheelGizmo
+    100050: Robot Roller
+    400000: //RootNode
+    400002: Ray
+    400004: Rig
+    400006: RigHead
+    400008: RigHeadGizmo
+    400010: RigLArm1
+    400012: RigLArm1Gizmo
+    400014: RigLArm2
+    400016: RigLArm2Gizmo
+    400018: RigLArmPalm
+    400020: RigLArmPalmGizmo
+    400022: RigLeg1
+    400024: RigLegPlatform
+    400026: RigPelvis
+    400028: RigPelvisGizmo
+    400030: RigRArm1
+    400032: RigRArm1Gizmo
+    400034: RigRArm2
+    400036: RigRArm2Gizmo
+    400038: RigRArmPalm
+    400040: RigRArmPalmGizmo
+    400042: RigSpine1
+    400044: RigSpine2
+    400046: RigWheel
+    400048: RigWheelGizmo
+    400050: Robot Roller
+    2300000: //RootNode
+    2300002: Ray
+    2300004: Robot Roller
+    3300000: //RootNode
+    3300002: Ray
+    3300004: Robot Roller
+    4300000: Robot Roller
+    4300002: Ray
+    9500000: //RootNode
+    13700000: Robot Roller
+  materials:
+    importMaterials: 0
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 3
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,207 @@
+fileFormatVersion: 2
+guid: b6947877794d4254c968b4d060262829
+timeCreated: 1460532718
+licenseType: Store
+ModelImporter:
+  serializedVersion: 18
+  fileIDToRecycleName:
+    100000: Ray
+    100002: Rig
+    100004: RigHead
+    100006: RigHeadGizmo
+    100008: RigLArm1
+    100010: RigLArm1Gizmo
+    100012: RigLArm2
+    100014: RigLArm2Gizmo
+    100016: RigLArmPalm
+    100018: RigLArmPalmGizmo
+    100020: RigLeg1
+    100022: RigLegPlatform
+    100024: RigPelvis
+    100026: RigPelvisGizmo
+    100028: RigRArm1
+    100030: RigRArm1Gizmo
+    100032: RigRArm2
+    100034: RigRArm2Gizmo
+    100036: RigRArmPalm
+    100038: RigRArmPalmGizmo
+    100040: RigSpine1
+    100042: RigSpine2
+    100044: RigWheel
+    100046: RigWheelGizmo
+    100048: Robot Roller
+    100050: //RootNode
+    400000: Ray
+    400002: Rig
+    400004: RigHead
+    400006: RigHeadGizmo
+    400008: RigLArm1
+    400010: RigLArm1Gizmo
+    400012: RigLArm2
+    400014: RigLArm2Gizmo
+    400016: RigLArmPalm
+    400018: RigLArmPalmGizmo
+    400020: RigLeg1
+    400022: RigLegPlatform
+    400024: RigPelvis
+    400026: RigPelvisGizmo
+    400028: RigRArm1
+    400030: RigRArm1Gizmo
+    400032: RigRArm2
+    400034: RigRArm2Gizmo
+    400036: RigRArmPalm
+    400038: RigRArmPalmGizmo
+    400040: RigSpine1
+    400042: RigSpine2
+    400044: RigWheel
+    400046: RigWheelGizmo
+    400048: Robot Roller
+    400050: //RootNode
+    2300000: Ray
+    3300000: Ray
+    4300000: Robot Roller
+    4300002: Ray
+    7400000: Idle
+    9500000: //RootNode
+    11100000: //RootNode
+    13700000: Robot Roller
+  materials:
+    importMaterials: 0
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 2
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Idle
+      takeName: Take 001
+      firstFrame: 0
+      lastFrame: 40
+      wrapMode: 2
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: Rig
+        weight: 1
+      - path: RigHeadGizmo
+        weight: 1
+      - path: RigLArm1Gizmo
+        weight: 1
+      - path: RigLArm2Gizmo
+        weight: 1
+      - path: RigLArmPalmGizmo
+        weight: 1
+      - path: RigLegPlatform
+        weight: 1
+      - path: RigPelvis
+        weight: 1
+      - path: RigPelvis/RigLeg1
+        weight: 1
+      - path: RigPelvis/RigLeg1/RigWheel
+        weight: 1
+      - path: RigPelvis/RigSpine1
+        weight: 1
+      - path: RigPelvis/RigSpine1/RigSpine2
+        weight: 1
+      - path: RigPelvis/RigSpine1/RigSpine2/RigHead
+        weight: 1
+      - path: RigPelvis/RigSpine1/RigSpine2/RigHead/Ray
+        weight: 1
+      - path: RigPelvis/RigSpine1/RigSpine2/RigHead/RigLArm1
+        weight: 1
+      - path: RigPelvis/RigSpine1/RigSpine2/RigHead/RigLArm1/RigLArm2
+        weight: 1
+      - path: RigPelvis/RigSpine1/RigSpine2/RigHead/RigLArm1/RigLArm2/RigLArmPalm
+        weight: 1
+      - path: RigPelvis/RigSpine1/RigSpine2/RigHead/RigRArm1
+        weight: 1
+      - path: RigPelvis/RigSpine1/RigSpine2/RigHead/RigRArm1/RigRArm2
+        weight: 1
+      - path: RigPelvis/RigSpine1/RigSpine2/RigHead/RigRArm1/RigRArm2/RigRArmPalm
+        weight: 1
+      - path: RigPelvisGizmo
+        weight: 1
+      - path: RigRArm1Gizmo
+        weight: 1
+      - path: RigRArm2Gizmo
+        weight: 1
+      - path: RigRArmPalmGizmo
+        weight: 1
+      - path: RigWheelGizmo
+        weight: 1
+      - path: Robot Roller
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
