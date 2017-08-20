@@ -11,6 +11,22 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 1906005200074734}
   m_IsPrefabParent: 1
+--- !u!1 &1643566222648286
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4766430692095314}
+  - component: {fileID: 114753137188107572}
+  m_Layer: 0
+  m_Name: NavMesh
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1906005200074734
 GameObject:
   m_ObjectHideFlags: 0
@@ -37,8 +53,22 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 4766430692095314}
   m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4766430692095314
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1643566222648286}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4385915011693316}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &82521187245287412
@@ -132,14 +162,43 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20954ad3c494f16478385dbe5f033e09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 50
+  width: 25
   height: 50
-  size: 1.1
-  walkableMaterial: {fileID: 2100000, guid: f1c86b67e1e50674ea0c6d2bb85ef2b3, type: 2}
-  nonWalkableMaterial: {fileID: 2100000, guid: 1028310cdd4c5e243abcc0917f301823, type: 2}
+  size: 1
+  walkableMaterial: {fileID: 2100000, guid: 95f35b214121c264d97ea4695276b482, type: 2}
+  nonWalkableMaterial: {fileID: 2100000, guid: a5312fd75ae1f5345b6b7ecb062eda68, type: 2}
   node: {fileID: 1472897427069794, guid: 998f981b1edc6c44385cd1862baa9f9c, type: 2}
   generationTime: 3
   minPitch: 0.5
   maxPitch: 1.5
   tickSfx: {fileID: 8300000, guid: 32d4b1811dda14a6cb9e059ee8ad17d2, type: 3}
   finishedSfx: {fileID: 8300000, guid: 2c5292ba5cf254919a6b9e2b18e04f49, type: 3}
+  navMeshSurface: {fileID: 114753137188107572}
+--- !u!114 &114753137188107572
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1643566222648286}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AgentTypeID: 0
+  m_CollectObjects: 0
+  m_Size: {x: 10, y: 10, z: 10}
+  m_Center: {x: 0, y: 2, z: 0}
+  m_LayerMask:
+    serializedVersion: 2
+    m_Bits: 256
+  m_UseGeometry: 1
+  m_DefaultArea: 0
+  m_IgnoreNavMeshAgent: 1
+  m_IgnoreNavMeshObstacle: 1
+  m_OverrideTileSize: 0
+  m_TileSize: 256
+  m_OverrideVoxelSize: 0
+  m_VoxelSize: 0.033333335
+  m_BuildHeightMesh: 0
+  m_BakedNavMeshData: {fileID: 0}

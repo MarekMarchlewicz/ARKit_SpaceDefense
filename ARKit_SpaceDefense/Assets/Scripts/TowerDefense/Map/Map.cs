@@ -86,6 +86,7 @@ public class Map : MonoBehaviour
                 Vector3 position = Vector3.right * (x - (width - 1) / 2f) * size + Vector3.forward * (y - (height - 1) / 2f) * size;
 
                 GameObject newNodeGO = Instantiate(node, position, Quaternion.identity, m_Transform);
+                newNodeGO.name = "Node" + (x + y * width).ToString();
 
                 Node newNode = newNodeGO.GetComponent<Node>();
                 newNode.walkable = false;
@@ -145,7 +146,7 @@ public class Map : MonoBehaviour
     private bool CanGoRight(int currentWidth, int currentHeight, Direction newDirection)
     {
         // is it at the edge?
-        if (currentWidth == width - 1)
+        if (currentWidth >= width - 2)
             return false;
         
         // is the one on the right walkable?
@@ -161,7 +162,7 @@ public class Map : MonoBehaviour
     private bool CanGoLeft(int currentWidth, int currentHeight, Direction newDirection)
     {
         // is it at the edge?
-        if (currentWidth == 0)
+        if (currentWidth <= 1)
             return false;
         // is the one on the left walkable?
         if (nodes[Mathf.Clamp(currentWidth - 1, 0, width - 1) + currentHeight * width].walkable)

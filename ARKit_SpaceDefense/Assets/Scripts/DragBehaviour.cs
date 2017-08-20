@@ -11,7 +11,10 @@ public class DragBehaviour : MonoBehaviour
     private float maxRayDistance = 300f;
 
     [SerializeField]
-    private float smoothing = 5f;
+    private float speed = 5f;
+
+    [SerializeField]
+    private Vector3 positionOffset = Vector3.up * 0.5f;
 
     private const float defaultCameraDepth = 5f;
     
@@ -23,6 +26,8 @@ public class DragBehaviour : MonoBehaviour
     private RaycastHit[] rayHitBuffer;
 
     public bool IsDragged { get { return touchId >=0; } }
+
+    private Node lastNode = null;
 
     private void Awake()
     {
@@ -65,16 +70,30 @@ public class DragBehaviour : MonoBehaviour
         {
             int hits = Physics.RaycastNonAlloc(dragCamera.ScreenPointToRay(touch.Value), rayHitBuffer, maxRayDistance, raycastMask);
 
-            float lerp = immediately ? 1 : Time.deltaTime * smoothing;
+            float lerp = immediately ? 1 : Time.deltaTime * speed;
 
             Vector3 newPosition = Vector3.zero;
 
+            Node node = null;
+
             if (hits > 0)
-                newPosition = rayHitBuffer[0].point;
-            else
+            {
+                node = rayHitBuffer[0].collider.GetComponent<Node>();
+
+                if (node != null)
+                {
+                    newPosition = node.transform.position + positionOffset;
+
+                    lastNode = node;
+                }
+            }
+
+            if (node == null)
+            {
                 newPosition = dragCamera.ScreenToWorldPoint(new Vector3(touch.Value.x, touch.Value.y, defaultCameraDepth));
-            
-            m_Transform.position = Vector3.Lerp(m_Transform.position, newPosition, lerp);
+            }
+
+            MoveTo(newPosition, lerp);
 
             if(OnDragUpdate != null)
             {
@@ -92,6 +111,12 @@ public class DragBehaviour : MonoBehaviour
         if (IsDragged)
         {
             UpdateDragging();
+        }
+        else if(lastNode != null)
+        {
+            m_Transform.position = lastNode.transform.position + positionOffset;
+
+            Destroy(this);
         }
     }
 
@@ -113,5 +138,10 @@ public class DragBehaviour : MonoBehaviour
         #endif
 
         return null;
+    }
+
+    private void MoveTo(Vector3 position, float lerp)
+    {
+        m_Transform.position = Vector3.Lerp(m_Transform.position, position, lerp);
     }
 }

@@ -5,8 +5,6 @@ public class Node : MonoBehaviour
 {
     public bool walkable;
 
-    private bool wasSet = false;
-    
     public void SetMaterial(Material newMaterial)
     {
         GetComponent<MeshRenderer>().material = newMaterial;
@@ -14,8 +12,6 @@ public class Node : MonoBehaviour
         if(walkable)
         {
             GetComponent<Animation>().Play();
-
-            wasSet = true;
         }
     }
 }
