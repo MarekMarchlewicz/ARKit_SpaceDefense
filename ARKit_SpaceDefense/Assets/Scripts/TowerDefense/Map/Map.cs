@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 [RequireComponent(typeof(AudioSource))]
 public class Map : MonoBehaviour
@@ -49,6 +50,11 @@ public class Map : MonoBehaviour
     [SerializeField]
     private AudioClip finishedSfx;
 
+    [Header("NavMesh")]
+
+    [SerializeField]
+    private NavMeshSurface navMeshSurface;
+    
     private List<Node> nodes = new List<Node>();
     private List<Node> walkableNodes = new List<Node>();
 
@@ -67,6 +73,8 @@ public class Map : MonoBehaviour
         SetRandomPath();
 
         StartCoroutine(GenerationEffect());
+
+        BakeNavMesh();
     }
     
     private void Create()
@@ -137,13 +145,14 @@ public class Map : MonoBehaviour
     private bool CanGoRight(int currentWidth, int currentHeight, Direction newDirection)
     {
         // is it at the edge?
-        if (currentWidth >= width - 1)
+        if (currentWidth == width - 1)
             return false;
+        
         // is the one on the right walkable?
         if (nodes[Mathf.Clamp(currentWidth + 1, 0, width - 1) + currentHeight * width].walkable)
             return false;
         // is the lower-right one walkable?
-        if (nodes[currentWidth + 1 + Mathf.Clamp((currentHeight - 1), 0, width - 1) * width].walkable)
+        if (nodes[currentWidth + 1 + Mathf.Clamp((currentHeight - 1), 0, height - 1) * width].walkable)
             return false;
 
         return true;
@@ -152,13 +161,13 @@ public class Map : MonoBehaviour
     private bool CanGoLeft(int currentWidth, int currentHeight, Direction newDirection)
     {
         // is it at the edge?
-        if (currentWidth <= 0)
+        if (currentWidth == 0)
             return false;
         // is the one on the left walkable?
         if (nodes[Mathf.Clamp(currentWidth - 1, 0, width - 1) + currentHeight * width].walkable)
             return false;
         // is the lower-left one walkable?
-        if (nodes[currentWidth - 1 + Mathf.Clamp((currentHeight - 1), 0, width - 1) * width].walkable)
+        if (nodes[currentWidth - 1 + Mathf.Clamp((currentHeight - 1), 0, height - 1) * width].walkable)
             return false;
 
         return true;
@@ -180,5 +189,23 @@ public class Map : MonoBehaviour
 
         m_AudioSource.pitch = 1f;
         m_AudioSource.PlayOneShot(finishedSfx);
+    }
+
+    private void BakeNavMesh()
+    {
+        for (int i = 0; i < nodes.Count; i++)
+        {
+            if (!nodes[i].walkable)
+            {
+                nodes[i].GetComponent<Collider>().enabled = false;
+            }
+        }
+
+        navMeshSurface.Bake();
+
+        for (int i = 0; i < nodes.Count; i++)
+        {
+            nodes[i].GetComponent<Collider>().enabled = true;
+        }
     }
 }
