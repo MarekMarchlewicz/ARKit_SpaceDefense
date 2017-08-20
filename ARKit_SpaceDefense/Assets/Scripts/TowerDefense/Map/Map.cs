@@ -58,6 +58,9 @@ public class Map : MonoBehaviour
     private List<Node> nodes = new List<Node>();
     private List<Node> walkableNodes = new List<Node>();
 
+    public Vector3 DefendersPosition { get { return walkableNodes[0].transform.position + Vector3.up * 0.5f; } }
+    public Vector3 AttackersPosition { get { return walkableNodes[walkableNodes.Count - 1].transform.position + Vector3.up * 0.5f; } }
+
     private Transform m_Transform;
     private AudioSource m_AudioSource;
 
@@ -65,10 +68,7 @@ public class Map : MonoBehaviour
     {
         m_Transform = GetComponent<Transform>();
         m_AudioSource = GetComponent<AudioSource>();
-    }
 
-    private void Start()
-    {
         Create();
         SetRandomPath();
 
@@ -76,7 +76,7 @@ public class Map : MonoBehaviour
 
         BakeNavMesh();
     }
-    
+        
     private void Create()
     {
         for (int y = 0; y < height; y++)
@@ -89,7 +89,7 @@ public class Map : MonoBehaviour
                 newNodeGO.name = "Node" + (x + y * width).ToString();
 
                 Node newNode = newNodeGO.GetComponent<Node>();
-                newNode.walkable = false;
+                newNode.isWalkable = false;
                 newNode.SetMaterial(nonWalkableMaterial);
                 nodes.Add(newNode);
             }
@@ -102,7 +102,7 @@ public class Map : MonoBehaviour
 
         int currentWidth = Random.Range(0, width);
 
-        nodes[currentWidth + currentHeight * width].walkable = true;
+        nodes[currentWidth + currentHeight * width].isWalkable = true;
         walkableNodes.Add(nodes[currentWidth + currentHeight * width]);
 
         while (currentHeight < height - 1)
@@ -116,7 +116,7 @@ public class Map : MonoBehaviour
             else if (newDirection == Direction.Right)
                 currentWidth++;
 
-            nodes[currentWidth + currentHeight * width].walkable = true;
+            nodes[currentWidth + currentHeight * width].isWalkable = true;
             walkableNodes.Add(nodes[currentWidth + currentHeight * width]);
         }
     }
@@ -150,10 +150,10 @@ public class Map : MonoBehaviour
             return false;
         
         // is the one on the right walkable?
-        if (nodes[Mathf.Clamp(currentWidth + 1, 0, width - 1) + currentHeight * width].walkable)
+        if (nodes[Mathf.Clamp(currentWidth + 1, 0, width - 1) + currentHeight * width].isWalkable)
             return false;
         // is the lower-right one walkable?
-        if (nodes[currentWidth + 1 + Mathf.Clamp((currentHeight - 1), 0, height - 1) * width].walkable)
+        if (nodes[currentWidth + 1 + Mathf.Clamp((currentHeight - 1), 0, height - 1) * width].isWalkable)
             return false;
 
         return true;
@@ -165,10 +165,10 @@ public class Map : MonoBehaviour
         if (currentWidth <= 1)
             return false;
         // is the one on the left walkable?
-        if (nodes[Mathf.Clamp(currentWidth - 1, 0, width - 1) + currentHeight * width].walkable)
+        if (nodes[Mathf.Clamp(currentWidth - 1, 0, width - 1) + currentHeight * width].isWalkable)
             return false;
         // is the lower-left one walkable?
-        if (nodes[currentWidth - 1 + Mathf.Clamp((currentHeight - 1), 0, height - 1) * width].walkable)
+        if (nodes[currentWidth - 1 + Mathf.Clamp((currentHeight - 1), 0, height - 1) * width].isWalkable)
             return false;
 
         return true;
@@ -196,7 +196,7 @@ public class Map : MonoBehaviour
     {
         for (int i = 0; i < nodes.Count; i++)
         {
-            if (!nodes[i].walkable)
+            if (!nodes[i].isWalkable)
             {
                 nodes[i].GetComponent<Collider>().enabled = false;
             }

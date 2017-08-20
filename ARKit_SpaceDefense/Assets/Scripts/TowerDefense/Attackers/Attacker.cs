@@ -3,6 +3,8 @@
 public class Attacker : MonoBehaviour
 {
     public event System.Action<Attacker> OnDead;
+    
+    public bool IsAlive { get { return Health > 0; } }
 
     private int health = 100;
     public int Health
@@ -25,10 +27,13 @@ public class Attacker : MonoBehaviour
 
     public virtual void TakeDamage(int damage)
     {
+        if (!IsAlive)
+            return;
+
         Health -= damage;
     }
 
-    private void Die()
+    protected virtual void Die()
     {
         if(OnDead != null)
         {

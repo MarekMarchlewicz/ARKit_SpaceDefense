@@ -9,7 +9,7 @@ public enum TurretState
     Ready
 }
 
-[RequireComponent(typeof(SphereCollider))]
+[RequireComponent(typeof(SphereCollider), typeof(AudioSource))]
 public class Turret : MonoBehaviour
 {
     [Header("Shooting")]
@@ -38,8 +38,14 @@ public class Turret : MonoBehaviour
     private float bulletStartVelocity = 100f;
 
     [SerializeField, Range(0, 360)]
-    private float aimPrecision = 25f;       
-    
+    private float aimPrecision = 25f;
+
+    [SerializeField]
+    private AudioClip shootSfx;
+
+    [SerializeField]
+    private AudioClip startSfx;
+
     private List<Attacker> attackers = new List<Attacker>();
 
     private TurretState turretState = TurretState.Inactive;
@@ -48,13 +54,38 @@ public class Turret : MonoBehaviour
 
     private ObjectPooler bulletPool;
 
-    private AudioSource audioSource;
+    private AudioSource m_AudioSource;
 
     private float lastTimeFired = 0f;
 
-    private void Start()
+    private void Awake()
     {
-        audioSource = GetComponent<AudioSource>();
+        GetComponent<DragBehaviour>().OnDragStop += OnDragStop;
+    }
+
+    private void OnDragStop(DragBehaviour dragBehaviour)
+    {
+        if(dragBehaviour.lastNode != null)
+        {
+            dragBehaviour.lastNode.isEmpty = false;
+
+            Initialize(dragBehaviour.lastNode.transform.position + Vector3.up * 0.5f);
+
+            Destroy(dragBehaviour);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    private void Initialize(Vector3 position)
+    {
+        transform.position = position;
+
+        m_AudioSource = GetComponent<AudioSource>();
+        m_AudioSource.clip = startSfx;
+        m_AudioSource.Play();
 
         ActivateTurret();
 
@@ -142,6 +173,9 @@ public class Turret : MonoBehaviour
             newBullet.transform.rotation = turretBarrel.rotation;
             newBullet.GetComponent<Rigidbody>().velocity = newBullet.transform.forward * bulletStartVelocity;
             newBullet.SetActive(true);
+
+            m_AudioSource.clip = shootSfx;
+            m_AudioSource.Play();
 
             lastTimeFired = Time.time;
         }

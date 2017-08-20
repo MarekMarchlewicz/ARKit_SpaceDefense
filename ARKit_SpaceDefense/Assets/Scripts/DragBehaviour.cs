@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
 public class DragBehaviour : MonoBehaviour
 {
     public event System.Action<DragBehaviour> OnDragStart, OnDragUpdate, OnDragStop;
@@ -19,6 +20,7 @@ public class DragBehaviour : MonoBehaviour
     private const float defaultCameraDepth = 5f;
     
     private Transform m_Transform;
+    private AudioSource m_AudioSource;
 
     private int touchId = -1;
     private Camera dragCamera;
@@ -27,11 +29,12 @@ public class DragBehaviour : MonoBehaviour
 
     public bool IsDragged { get { return touchId >=0; } }
 
-    private Node lastNode = null;
+    public Node lastNode = null;
 
     private void Awake()
     {
         m_Transform = GetComponent<Transform>();
+        m_AudioSource = GetComponent<AudioSource>();
         rayHitBuffer = new RaycastHit[10];
     }
 
@@ -72,28 +75,32 @@ public class DragBehaviour : MonoBehaviour
 
             float lerp = immediately ? 1 : Time.deltaTime * speed;
 
-            Vector3 newPosition = Vector3.zero;
-
-            Node node = null;
+            Vector3? newPosition = null;
 
             if (hits > 0)
             {
-                node = rayHitBuffer[0].collider.GetComponent<Node>();
+                Node node = rayHitBuffer[0].collider.GetComponent<Node>();
 
-                if (node != null)
+                if (node != null && !node.isWalkable && node.isEmpty)
                 {
                     newPosition = node.transform.position + positionOffset;
 
-                    lastNode = node;
+                    if (lastNode != node)
+                    {
+                        lastNode = node;
+
+                        if(!m_AudioSource.isPlaying)
+                            m_AudioSource.Play();
+                    }
                 }
             }
 
-            if (node == null)
+            if (!newPosition.HasValue)
             {
                 newPosition = dragCamera.ScreenToWorldPoint(new Vector3(touch.Value.x, touch.Value.y, defaultCameraDepth));
             }
 
-            MoveTo(newPosition, lerp);
+            MoveTo(newPosition.Value, lerp);
 
             if(OnDragUpdate != null)
             {
@@ -111,12 +118,6 @@ public class DragBehaviour : MonoBehaviour
         if (IsDragged)
         {
             UpdateDragging();
-        }
-        else if(lastNode != null)
-        {
-            m_Transform.position = lastNode.transform.position + positionOffset;
-
-            Destroy(this);
         }
     }
 

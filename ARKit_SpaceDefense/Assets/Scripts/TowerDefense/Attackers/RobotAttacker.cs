@@ -25,7 +25,7 @@ public class RobotAttacker : Attacker
     private int dieId = Animator.StringToHash("Die");
     private int takeDamageId = Animator.StringToHash("Take Damage");
 
-    private void Awake()
+    public void Initialize(Vector3 goal)
     {
         m_Animator = GetComponentInChildren<Animator>();
         m_NavMeshAgent = GetComponent<NavMeshAgent>();
@@ -33,27 +33,16 @@ public class RobotAttacker : Attacker
 
         lastPosition = m_Transform.position;
         lastRotation = m_Transform.rotation.eulerAngles.y;
-        
-        Initialize();
-    }
 
-    public void Initialize()
-    {
         healthBar.UpdateBar(1f);
+
+        m_NavMeshAgent.destination = goal;
     }
 
     private void Update()
     {
-        if(m_NavMeshAgent.isOnNavMesh)
-        {
-            NavMeshHit hit;
-
-            NavMesh.SamplePosition(target.position, out hit, float.MaxValue, -1);
-            
-            m_NavMeshAgent.destination = hit.position;
-        }
-
-        UpdateAnimator();
+        if(m_Animator != null)
+            UpdateAnimator();
     }
 
     private void UpdateAnimator()
@@ -74,6 +63,20 @@ public class RobotAttacker : Attacker
 
         healthBar.UpdateBar(Health / (100f));
 
-        m_Animator.SetTrigger(takeDamageId);
+        if (IsAlive)
+        {
+            m_Animator.SetTrigger(takeDamageId);
+        }
+    }
+
+    protected override void Die()
+    {
+        base.Die();
+
+        m_Animator.SetTrigger(dieId);
+
+        m_NavMeshAgent.isStopped = true;
+
+        Destroy(gameObject, 1.3f);
     }
 }
