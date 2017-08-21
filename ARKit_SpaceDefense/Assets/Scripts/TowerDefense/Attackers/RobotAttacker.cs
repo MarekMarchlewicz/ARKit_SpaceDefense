@@ -8,10 +8,7 @@ public class RobotAttacker : Attacker
 
     [SerializeField]
     private HealthBar healthBar;
-
-    [SerializeField]
-    private Transform target;
-
+    
     [SerializeField, Range(0,1)]
     private float forwardStrength = .2f;
     
