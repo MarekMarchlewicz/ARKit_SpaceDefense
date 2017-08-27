@@ -61,6 +61,9 @@ public class Map : MonoBehaviour
     public Vector3 DefendersPosition { get { return walkableNodes[0].transform.position + Vector3.up * 0.5f; } }
     public Vector3 AttackersPosition { get { return walkableNodes[walkableNodes.Count - 1].transform.position + Vector3.up * 0.5f; } }
 
+	private bool isBusy = false;
+	public bool IsBusy { get { return isBusy; } }
+
     private Transform m_Transform;
     private AudioSource m_AudioSource;
 
@@ -68,14 +71,18 @@ public class Map : MonoBehaviour
     {
         m_Transform = GetComponent<Transform>();
         m_AudioSource = GetComponent<AudioSource>();
-
-        Create();
-        SetRandomPath();
-
-        StartCoroutine(GenerationEffect());
-
-        BakeNavMesh();
     }
+
+	public void GenerateNew()
+	{
+		RemoveOld ();
+
+		Create();
+		SetRandomPath();
+		BakeNavMesh();
+
+		StartCoroutine(GenerationEffect());
+	}
         
     private void Create()
     {
@@ -176,6 +183,8 @@ public class Map : MonoBehaviour
 
     private IEnumerator GenerationEffect()
     {
+		isBusy = true;
+
         for(int i = 0; i < walkableNodes.Count; i++)
         {
             float pitch = Mathf.Lerp(minPitch, maxPitch, i / (walkableNodes.Count - 1));
@@ -190,6 +199,8 @@ public class Map : MonoBehaviour
 
         m_AudioSource.pitch = 1f;
         m_AudioSource.PlayOneShot(finishedSfx);
+
+		isBusy = false;
     }
 
     private void BakeNavMesh()
@@ -209,4 +220,15 @@ public class Map : MonoBehaviour
             nodes[i].GetComponent<Collider>().enabled = true;
         }
     }
+
+	private void RemoveOld()
+	{
+		for (int i = 0; i < nodes.Count; i++) 
+		{
+			Destroy(nodes [i].gameObject);
+		}
+
+		nodes.Clear ();
+		walkableNodes.Clear ();
+	}
 }

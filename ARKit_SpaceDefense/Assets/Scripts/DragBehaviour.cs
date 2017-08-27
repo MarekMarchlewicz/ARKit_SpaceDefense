@@ -81,7 +81,7 @@ public class DragBehaviour : MonoBehaviour
             {
                 Node node = rayHitBuffer[0].collider.GetComponent<Node>();
 
-                if (node != null && !node.isWalkable && node.isEmpty)
+                if (node != null && !node.isWalkable)
                 {
                     newPosition = node.transform.position + positionOffset;
 

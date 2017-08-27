@@ -3,7 +3,7 @@
 public enum GameMode
 {
     FindPlane,
-    Wait,
+    GeneratingMap,
     Playing,
     GameOver
 }
@@ -11,6 +11,8 @@ public enum GameMode
 public class GameManager : MonoBehaviour
 {
     public static event System.Action<GameMode> OnGameModeChanged;
+
+	[SerializeField] private Map map;
 
     private GameMode gameMode;
     public static GameMode GameMode { get { return instance.gameMode; } private set { instance.gameMode = value; } }
@@ -37,7 +39,22 @@ public class GameManager : MonoBehaviour
             OnGameModeChanged(gameMode);
         }
 
-        Debug.Log(gameMode);
+		switch (newGameMode) 
+		{
+		case GameMode.FindPlane:
+			UIManager.ShowMessage ("Find a flat surface", 10f);
+			break;
+		case GameMode.GeneratingMap:
+			UIManager.ShowMessage ("Generating new map", 5f);
+			map.GenerateNew ();
+			break;
+		case GameMode.Playing:
+			UIManager.ShowMessage ("Start!", 1f);
+			break;
+		case GameMode.GameOver:
+			UIManager.ShowMessage ("Game Over!", 1f);
+			break;
+		}
     }
 
     private void Update()
@@ -47,8 +64,8 @@ public class GameManager : MonoBehaviour
             case GameMode.FindPlane:
                 UpdateFindPlane();
                 break;
-            case GameMode.Wait:
-                UpdateWait();
+            case GameMode.GeneratingMap:
+                UpdateGeneratingMap();
                 break;
             case GameMode.Playing:
                 UpdatePlaying();
@@ -61,25 +78,24 @@ public class GameManager : MonoBehaviour
 
     private void UpdateFindPlane()
     {
-        ChangeMode(GameMode.Wait);
+        ChangeMode(GameMode.GeneratingMap);
     }
 
-    private const float waitingTime = 5f;
 
-    private void UpdateWait()
+    private void UpdateGeneratingMap()
     {
-        //Debug.Log((waitingTime - Time.time - timer).ToString());
-
-        if(Time.time - timer > waitingTime)
-        {
-            ChangeMode(GameMode.Playing);
-        }
+		if (!map.IsBusy)
+		{
+			ChangeMode (GameMode.Playing);
+		}
     }
 
-    private const float matchTime = 60f * 3;
+    private const float matchTime = 60f;
 
     private void UpdatePlaying()
     {
+		UIManager.UpdateTimer (Mathf.Clamp (matchTime - Mathf.Abs(timer - Time.time), 0f, float.MaxValue));
+
         if(Time.time - timer > matchTime)
         {
             ChangeMode(GameMode.GameOver);
@@ -88,6 +104,6 @@ public class GameManager : MonoBehaviour
 
     private void UpdateGameOver()
     {
-        ChangeMode(GameMode.Wait);
+        ChangeMode(GameMode.GeneratingMap);
     }
 }

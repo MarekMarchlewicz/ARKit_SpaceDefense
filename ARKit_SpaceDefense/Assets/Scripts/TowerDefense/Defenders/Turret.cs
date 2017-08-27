@@ -67,8 +67,6 @@ public class Turret : MonoBehaviour
     {
         if(dragBehaviour.lastNode != null)
         {
-            dragBehaviour.lastNode.isEmpty = false;
-
 			dragBehaviour.lastNode.gameObject.SetActive (false);
 
             Initialize(dragBehaviour.lastNode.transform.position + Vector3.up * 0.45f);
