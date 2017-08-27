@@ -53,8 +53,6 @@ public class UIManager : MonoBehaviour
 
 	private void FadeOutMessage()
 	{
-		Debug.Log ("Invoked");
-
 		timeline.playableAsset = fadeOut;
 		timeline.Play ();
 	}

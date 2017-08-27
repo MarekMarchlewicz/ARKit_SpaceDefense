@@ -106,4 +106,9 @@ public class GameManager : MonoBehaviour
     {
         ChangeMode(GameMode.GeneratingMap);
     }
+
+	public void SpawnEnemies(GameObject enemy, int count, Transform spawnPoint)
+	{
+		Debug.Log (count);
+	}
 }
