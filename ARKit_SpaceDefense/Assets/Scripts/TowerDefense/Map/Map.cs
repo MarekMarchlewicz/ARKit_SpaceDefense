@@ -128,7 +128,7 @@ public class Map : MonoBehaviour
         }
     }
 
-    List<Direction> tempDirections = new List<Direction>();
+    private List<Direction> tempDirections = new List<Direction>();
 
     private Direction GetRandomDirection(int currentWidth, int currentHeight)
     {
