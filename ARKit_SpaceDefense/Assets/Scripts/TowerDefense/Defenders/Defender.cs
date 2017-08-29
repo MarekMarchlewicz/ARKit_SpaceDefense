@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public class ForceField : MonoBehaviour
+public class Defender : MonoBehaviour
 {
 	[SerializeField]
 	private Color healthyColor;
@@ -21,6 +21,7 @@ public class ForceField : MonoBehaviour
     [SerializeField]
     private float maxRadius = 60f;
 
+	public int Health { get { return health; } }
 	private int health = 100;
     
     private List<Vector4> positions = new List<Vector4>();

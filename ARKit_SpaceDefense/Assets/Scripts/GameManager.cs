@@ -16,13 +16,17 @@ public class GameManager : MonoBehaviour
 
 	[SerializeField] private float matchTime = 60f;
 
-	[SerializeField] private Spawner spawner;
+	[SerializeField] private Spawner attackerSpawner;
+
+	[SerializeField] private GameObject defender;
 
 	[SerializeField] private int waveSize = 2;
 
 	[SerializeField] private float delayBetweenSpawns = 10f;
 
 	[SerializeField] private GameObject addTurretButton;
+
+	private Defender activeDefender;
 
     private GameMode gameMode;
     public static GameMode GameMode { get { return instance.gameMode; } private set { instance.gameMode = value; } }
@@ -63,11 +67,13 @@ public class GameManager : MonoBehaviour
 			break;
 		case GameMode.Playing:
 			UIManager.ShowMessage ("Start!", 1f);
-			spawner.Spawn (map.AttackersPosition, map.DefendersPosition, waveSize, delayBetweenSpawns);
+			attackerSpawner.Spawn (map.AttackersPosition, map.DefendersPosition, waveSize, delayBetweenSpawns);
+			activeDefender = Instantiate (defender, map.DefendersPosition + Vector3.up * 1.5f, Quaternion.identity).GetComponent<Defender> ();
 			break;
 		case GameMode.GameOver:
 			UIManager.ShowMessage ("Game Over!", 1f);
-			spawner.Stop ();
+			attackerSpawner.Stop ();
+			Destroy (activeDefender.gameObject);
 			break;
 		}
     }
@@ -109,7 +115,7 @@ public class GameManager : MonoBehaviour
     {
 		UIManager.UpdateTimer (Mathf.Clamp (matchTime - Mathf.Abs(timer - Time.time), 0f, float.MaxValue));
 
-        if(Time.time - timer > matchTime)
+		if(Time.time - timer > matchTime || activeDefender.Health <= 0)
         {
             ChangeMode(GameMode.GameOver);
         }

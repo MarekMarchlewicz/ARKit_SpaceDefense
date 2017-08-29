@@ -42,7 +42,7 @@ public class Spawner : MonoBehaviour
     {
 		for (int i = 0; i < spawnWaveSize; i++)
 		{
-			Vector3 randomPosition = Random.onUnitSphere * 0.2f;
+			Vector3 randomPosition = Random.onUnitSphere * 0.5f;
 			randomPosition.y = 0f;
 
 			GameObject attackerGO = Instantiate (attackerPrefab, transform.position + randomPosition, Quaternion.identity);

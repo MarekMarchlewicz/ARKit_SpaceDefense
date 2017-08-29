@@ -58,8 +58,21 @@ public class Map : MonoBehaviour
     private List<Node> nodes = new List<Node>();
     private List<Node> walkableNodes = new List<Node>();
 
-    public Vector3 DefendersPosition { get { return walkableNodes[0].transform.position + Vector3.up * 0.5f; } }
-    public Vector3 AttackersPosition { get { return walkableNodes[walkableNodes.Count - 1].transform.position + Vector3.up * 0.5f; } }
+    public Vector3 DefendersPosition 
+	{ 
+		get 
+		{ 
+			return GetPositionOnNavmesh(walkableNodes[0].transform.position + Vector3.up * 0.5f); 
+		} 
+	}
+
+    public Vector3 AttackersPosition 
+	{ 
+		get 
+		{ 
+			return GetPositionOnNavmesh(walkableNodes [walkableNodes.Count - 1].transform.position + Vector3.up * 0.5f);
+		} 
+	}
 
 	private bool isBusy = false;
 	public bool IsBusy { get { return isBusy; } }
@@ -236,4 +249,19 @@ public class Map : MonoBehaviour
             nodes[i].GetComponent<Collider>().enabled = true;
         }
     }
+
+	private Vector3 GetPositionOnNavmesh(Vector3 positionToSample)
+	{
+		NavMeshHit hit;
+		if (NavMesh.SamplePosition (positionToSample, out hit, 5f, NavMesh.AllAreas)) 
+		{
+			return hit.position;
+		} 
+		else 
+		{
+			Debug.LogError ("Can't find position on navmesh");
+
+			return positionToSample;
+		}
+	}
 }

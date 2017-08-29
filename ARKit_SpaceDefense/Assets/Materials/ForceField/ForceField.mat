@@ -76,7 +76,7 @@ Material:
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _HitColor: {r: 0.2827587, g: 0, b: 1, a: 1}
-    - _HitEmission: {r: 0.4817647, g: 0.7076219, b: 0.728, a: 1}
-    - _RimColor: {r: 1, g: 0.3019608, b: 0, a: 1}
+    - _HitColor: {r: 0.2827587, g: 0, b: 1, a: 0.541}
+    - _HitEmission: {r: 0, g: 0, b: 0, a: 1}
+    - _RimColor: {r: 0, g: 0.7725491, b: 0.121568635, a: 1}
     - _RimEmission: {r: 0.4705882, g: 0.4705882, b: 0.4705882, a: 1}

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.AI;
 
-[RequireComponent(typeof(NavMeshAgent), typeof(LineRenderer))]
+[RequireComponent(typeof(NavMeshAgent))]
 public class RobotAttacker : Attacker
 {
     [SerializeField]
@@ -22,10 +22,8 @@ public class RobotAttacker : Attacker
     private Animator m_Animator;
     private Transform m_Transform;
     private NavMeshAgent m_NavMeshAgent;
-    private LineRenderer m_LineRenderer;
 
     private Vector3 lastPosition;
-    private float lastRotation;
 
     private int forwardId = Animator.StringToHash("Forward");
     private int dieId = Animator.StringToHash("Die");
@@ -33,17 +31,15 @@ public class RobotAttacker : Attacker
 	private int fireId = Animator.StringToHash("Right Blast Attack");
 	private int aimId = Animator.StringToHash("Right Aim");
 
-    private ForceField forceField = null;
+    private Defender forceField = null;
 
     public void Initialize(Vector3 goal)
     {
         m_Animator = GetComponentInChildren<Animator>();
         m_Transform = GetComponent<Transform>();
         m_NavMeshAgent = GetComponent<NavMeshAgent>();
-        m_LineRenderer = GetComponent<LineRenderer>();
 
         lastPosition = m_Transform.position;
-        lastRotation = m_Transform.rotation.eulerAngles.y;
 
         healthBar.UpdateBar(1f);
 
@@ -82,7 +78,7 @@ public class RobotAttacker : Attacker
 
     private void OnTriggerEnter(Collider collider)
     {
-		ForceField newForceField = collider.GetComponent<ForceField>();
+		Defender newForceField = collider.GetComponent<Defender>();
 
 		if(newForceField != null)
         {
