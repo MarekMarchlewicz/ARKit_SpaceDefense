@@ -3,6 +3,12 @@ using UnityEngine;
 
 public class ForceField : MonoBehaviour
 {
+	[SerializeField]
+	private Color healthyColor;
+
+	[SerializeField]
+	private Color deadColor;
+
     [SerializeField]
     private float rotationSpeed = 20f;
 
@@ -14,6 +20,8 @@ public class ForceField : MonoBehaviour
 
     [SerializeField]
     private float maxRadius = 60f;
+
+	private int health = 100;
     
     private List<Vector4> positions = new List<Vector4>();
     private List<float> positionsStartTime = new List<float>();
@@ -29,12 +37,14 @@ public class ForceField : MonoBehaviour
         m_MeshRenderer = GetComponent<MeshRenderer>();
     }
 
-    public void Hit(Vector3 position)
+	public void Hit(int damage, Vector3 position)
     {
         positions.Add(position);
         positionsStartTime.Add(Time.time);
         positionStrength.Add(0f);
         positionAngle.Add(0f);
+
+		health -= damage;
     }
     
 	private void Update ()
@@ -52,6 +62,7 @@ public class ForceField : MonoBehaviour
 
         m_MeshRenderer.material.SetInt("_PointsLength", positions.Count);
         m_MeshRenderer.material.SetFloat("_Radius", Mathf.Deg2Rad * maxRadius);
+		m_MeshRenderer.material.SetColor ("_RimColor", Color.Lerp (deadColor, healthyColor, health / 100f));
 
         transform.rotation *= Quaternion.Euler(Vector3.up * rotationSpeed * Time.deltaTime);
     }

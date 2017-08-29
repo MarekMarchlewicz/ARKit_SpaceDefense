@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 public class Spawner : MonoBehaviour
 {
@@ -6,25 +7,49 @@ public class Spawner : MonoBehaviour
     private Map map;
 
     [SerializeField]
-    private float spawnDelay = 5f;
-
-    [SerializeField]
-    private float spawnStart = 10f;
-
-    [SerializeField]
     private GameObject attackerPrefab;
 
-    private void Start()
-    {
-        transform.position = map.AttackersPosition;
+	private int spawnWaveSize;
 
-        InvokeRepeating("Spawn", spawnStart, spawnDelay);
-    }
+	private Vector3 targetAttackPosition;
+
+	private List<GameObject> spawnedAttackers = new List<GameObject>();
+
+	public void Spawn(Vector3 spawnPosition, Vector3 targetPosition, int waveSize, float delayBetweenWaves)
+	{
+		transform.position = spawnPosition;
+		targetAttackPosition = targetPosition;
+
+		spawnWaveSize = waveSize;
+
+		InvokeRepeating("Spawn", 0f, delayBetweenWaves);
+	}
+
+	public void Stop()
+	{
+		CancelInvoke ("Spawn");
+
+		for (int i = 0; i < spawnedAttackers.Count; i++) 
+		{
+			if (spawnedAttackers [i] != null) 
+			{
+				Destroy (spawnedAttackers [i]);
+			}
+		}
+	}
 
     private void Spawn()
     {
-        GameObject attackerGO = Instantiate(attackerPrefab, transform);
+		for (int i = 0; i < spawnWaveSize; i++)
+		{
+			Vector3 randomPosition = Random.onUnitSphere * 0.2f;
+			randomPosition.y = 0f;
 
-        attackerGO.GetComponent<RobotAttacker>().Initialize(map.DefendersPosition);
+			GameObject attackerGO = Instantiate (attackerPrefab, transform.position + randomPosition, Quaternion.identity);
+
+			spawnedAttackers.Add (attackerGO);
+
+			attackerGO.GetComponent<RobotAttacker> ().Initialize (targetAttackPosition);
+		}
     }
 }

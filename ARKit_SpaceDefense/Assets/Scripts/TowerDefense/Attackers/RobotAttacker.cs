@@ -10,11 +10,14 @@ public class RobotAttacker : Attacker
     [SerializeField, Range(0,1)]
     private float forwardStrength = .2f;
 
-    [SerializeField]
-    private float aimRandom = 30f;
+	[SerializeField, Range(0,100)]
+    private int damagePerShot = 5;
 
     [SerializeField, Range(0, 10)]
     private int shotsPerSecond = 1;
+
+	[SerializeField]
+	private Transform rightHandTransform;
     
     private Animator m_Animator;
     private Transform m_Transform;
@@ -27,7 +30,8 @@ public class RobotAttacker : Attacker
     private int forwardId = Animator.StringToHash("Forward");
     private int dieId = Animator.StringToHash("Die");
     private int takeDamageId = Animator.StringToHash("Take Damage");
-    private int fireId = Animator.StringToHash("Fire");
+	private int fireId = Animator.StringToHash("Right Blast Attack");
+	private int aimId = Animator.StringToHash("Right Aim");
 
     private ForceField forceField = null;
 
@@ -78,10 +82,12 @@ public class RobotAttacker : Attacker
 
     private void OnTriggerEnter(Collider collider)
     {
-        forceField = collider.GetComponent<ForceField>();
+		ForceField newForceField = collider.GetComponent<ForceField>();
 
-        if(forceField != null)
+		if(newForceField != null)
         {
+			forceField = newForceField;
+
             m_NavMeshAgent.isStopped = true;
 
             float delay = 1f / shotsPerSecond;
@@ -106,7 +112,7 @@ public class RobotAttacker : Attacker
     {
         base.Die();
 
-        CancelInvoke();
+		CancelInvoke("Fire");
 
         m_Animator.SetTrigger(dieId);
 
@@ -118,28 +124,23 @@ public class RobotAttacker : Attacker
     private void Fire()
     {
         m_Animator.SetTrigger(fireId);
+		m_Animator.SetBool(aimId, true);
 
-        Invoke("TakeAShot", 1f);
+		TakeAShot ();
     }
 
     private void TakeAShot()
     {
-        Vector3 distance = forceField.transform.position - m_Transform.position;
+		Vector3 distance = forceField.transform.position - rightHandTransform.position;
 
         Vector3 aim = distance.normalized;
-
-        //Vector2 rand = Random.insideUnitCircle * aimRandom;
-
-        //Vector3 randomDirection = ()
-
-        //Quaternion.LookRotation()
 
         Ray ray = new Ray(m_Transform.position, aim);
         RaycastHit rayHit;
 
         if (forceField.GetComponent<MeshCollider>().Raycast(ray, out rayHit, distance.magnitude))
         {
-            forceField.Hit(rayHit.normal);
+			forceField.Hit(damagePerShot, rayHit.normal);
         }
     }
 }

@@ -79,11 +79,23 @@ public class Map : MonoBehaviour
 
 		Create();
 		SetRandomPath();
-		BakeNavMesh();
 
 		StartCoroutine(GenerationEffect());
 	}
-        
+
+	private void RemoveOld()
+	{
+		navMeshSurface.RemoveData ();
+
+		for (int i = 0; i < nodes.Count; i++) 
+		{
+			Destroy(nodes [i].gameObject);
+		}
+
+		nodes.Clear ();
+		walkableNodes.Clear ();
+	}
+
     private void Create()
     {
         for (int y = 0; y < height; y++)
@@ -185,6 +197,10 @@ public class Map : MonoBehaviour
     {
 		isBusy = true;
 
+		yield return new WaitForSeconds(generationTime / walkableNodes.Count);
+
+		BakeNavMesh();
+
         for(int i = 0; i < walkableNodes.Count; i++)
         {
             float pitch = Mathf.Lerp(minPitch, maxPitch, i / (walkableNodes.Count - 1));
@@ -212,7 +228,7 @@ public class Map : MonoBehaviour
                 nodes[i].GetComponent<Collider>().enabled = false;
             }
         }
-
+			
         navMeshSurface.Bake();
 
         for (int i = 0; i < nodes.Count; i++)
@@ -220,15 +236,4 @@ public class Map : MonoBehaviour
             nodes[i].GetComponent<Collider>().enabled = true;
         }
     }
-
-	private void RemoveOld()
-	{
-		for (int i = 0; i < nodes.Count; i++) 
-		{
-			Destroy(nodes [i].gameObject);
-		}
-
-		nodes.Clear ();
-		walkableNodes.Clear ();
-	}
 }
