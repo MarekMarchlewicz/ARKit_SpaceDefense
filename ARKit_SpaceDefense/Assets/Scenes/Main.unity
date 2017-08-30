@@ -216,7 +216,7 @@ MonoBehaviour:
   waveSize: 2
   delayBetweenSpawns: 10
   addTurretButton: {fileID: 2088350751}
-  gameMode: 1
+  gameMode: 0
 --- !u!4 &432367121
 Transform:
   m_ObjectHideFlags: 0

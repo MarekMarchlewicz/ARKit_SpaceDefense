@@ -35,6 +35,18 @@ public class DragBehaviour : MonoBehaviour
         m_Transform = GetComponent<Transform>();
         m_AudioSource = GetComponent<AudioSource>();
         rayHitBuffer = new RaycastHit[10];
+
+		GameManager.OnGameModeChanged += OnGameModeChanged;
+    }
+
+	private void OnDestroy()
+	{
+		GameManager.OnGameModeChanged -= OnGameModeChanged;
+	}
+
+    private void OnGameModeChanged (GameMode newGameMode)
+    {
+		StopDragging ();
     }
 
     public void StartDragging(int newTouchId, Camera newDragCamera)

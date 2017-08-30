@@ -65,7 +65,7 @@ public class Turret : MonoBehaviour
 
     private void OnDragStop(DragBehaviour dragBehaviour)
     {
-		if(dragBehaviour.lastNode != null && GameManager.instance.ActiveTurrets < GameManager.MAX_TURRETS)
+		if(dragBehaviour.lastNode != null && GameManager.GameMode == GameMode.Playing && GameManager.instance.ActiveTurrets < GameManager.MAX_TURRETS)
         {
 			dragBehaviour.lastNode.gameObject.SetActive (false);
 
