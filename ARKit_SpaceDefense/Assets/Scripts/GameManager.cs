@@ -119,36 +119,7 @@ public class GameManager : MonoBehaviour
 
     private void UpdateFindPlane()
     {
-		if (Input.touchCount > 0)
-		{
-			var touch = Input.GetTouch(0);
-			if (touch.phase == TouchPhase.Began)
-			{
-				var screenPosition = Camera.main.ScreenToViewportPoint(touch.position);
-				ARPoint point = new ARPoint {
-					x = screenPosition.x,
-					y = screenPosition.y
-				};
-
-				// prioritize reults types
-				ARHitTestResultType[] resultTypes = 
-				{
-					ARHitTestResultType.ARHitTestResultTypeExistingPlaneUsingExtent, 
-					// if you want to use infinite planes use this:
-					//ARHitTestResultType.ARHitTestResultTypeExistingPlane,
-					ARHitTestResultType.ARHitTestResultTypeHorizontalPlane, 
-					ARHitTestResultType.ARHitTestResultTypeFeaturePoint
-				}; 
-
-				foreach (ARHitTestResultType resultType in resultTypes)
-				{
-					if (HitTestWithResultType (point, resultType))
-					{
-						return;
-					}
-				}
-			}
-		}
+		
     }
 
 
@@ -179,21 +150,6 @@ public class GameManager : MonoBehaviour
     {
         ChangeMode(GameMode.GeneratingMap);
     }
-
-	private bool HitTestWithResultType (ARPoint point, ARHitTestResultType resultTypes)
-	{
-		List<ARHitTestResult> hitResults = UnityARSessionNativeInterface.GetARSessionNativeInterface ().HitTest (point, resultTypes);
-		if (hitResults.Count > 0) 
-		{
-			map.transform.position = UnityARMatrixOps.GetPosition(hitResults [0].worldTransform);
-			map.transform.rotation = UnityARMatrixOps.GetRotation (hitResults [0].worldTransform);
-
-			ChangeMode(GameMode.GeneratingMap);
-
-			return true;
-		}
-		return false;
-	}
 
 	public void AddTurret(GameObject newTurret)
 	{

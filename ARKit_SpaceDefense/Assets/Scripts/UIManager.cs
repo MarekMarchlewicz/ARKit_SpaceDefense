@@ -59,7 +59,7 @@ public class UIManager : MonoBehaviour
 
 	public static void UpdateTimer(float time, bool visible = true)
 	{
-		instance.timer.text = time.ToString ("00");
+		instance.timer.text = "Time left: " + time.ToString ("00");
 
 		instance.timer.gameObject.SetActive (visible);
 	}

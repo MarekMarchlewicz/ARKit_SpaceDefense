@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.AI;
 
-[RequireComponent(typeof(NavMeshAgent))]
+[RequireComponent(typeof(NavMeshAgent), typeof(AudioSource))]
 public class RobotAttacker : Attacker
 {
     [SerializeField]
@@ -18,10 +18,14 @@ public class RobotAttacker : Attacker
 
 	[SerializeField]
 	private Transform rightHandTransform;
+
+	[SerializeField]
+	private AudioClip fireClip, dieClip;
     
     private Animator m_Animator;
     private Transform m_Transform;
     private NavMeshAgent m_NavMeshAgent;
+	private AudioSource m_AudioSource;
 
     private Vector3 lastPosition;
 
@@ -38,6 +42,7 @@ public class RobotAttacker : Attacker
         m_Animator = GetComponentInChildren<Animator>();
         m_Transform = GetComponent<Transform>();
         m_NavMeshAgent = GetComponent<NavMeshAgent>();
+		m_AudioSource = GetComponent<AudioSource> ();
 
         lastPosition = m_Transform.position;
 
@@ -114,6 +119,10 @@ public class RobotAttacker : Attacker
 
         m_NavMeshAgent.isStopped = true;
 
+		m_AudioSource.clip = dieClip;
+
+		m_AudioSource.Play ();
+
         Destroy(gameObject, 1.3f);
     }
 
@@ -138,5 +147,7 @@ public class RobotAttacker : Attacker
         {
 			forceField.Hit(damagePerShot, rayHit.normal);
         }
+			
+		m_AudioSource.Play ();
     }
 }

@@ -16,7 +16,7 @@ public class DragBehaviour : MonoBehaviour
 
 	public Vector3 positionOffset = Vector3.up * 0.001f;
 
-    private const float defaultCameraDepth = 5f;
+    private const float defaultCameraDepth = 3f;
     
     private Transform m_Transform;
     private AudioSource m_AudioSource;
