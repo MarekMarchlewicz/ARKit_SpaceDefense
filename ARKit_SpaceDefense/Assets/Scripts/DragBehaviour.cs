@@ -40,7 +40,7 @@ public class DragBehaviour : MonoBehaviour
 
     public void StartDragging(int newTouchId, Camera newDragCamera)
     {
-        #if UNITY_STANDALONE
+        #if UNITY_EDITOR
         touchId = 1;
         #else
         touchId = newTouchId;
@@ -123,7 +123,7 @@ public class DragBehaviour : MonoBehaviour
 
     private Vector2? GetTouchPosition()
     {
-        #if UNITY_STANDALONE
+        #if UNITY_EDITOR
         if (Input.GetMouseButton(0))
         {
             return Input.mousePosition;
@@ -131,7 +131,7 @@ public class DragBehaviour : MonoBehaviour
         #else
         for (int t = 0; t < Input.touchCount; t++)
         {
-            if (Input.touches[t].fingerId == touchId.Value)
+            if (Input.touches[t].fingerId == touchId)
             {
                 return Input.touches[t].position;
             }
