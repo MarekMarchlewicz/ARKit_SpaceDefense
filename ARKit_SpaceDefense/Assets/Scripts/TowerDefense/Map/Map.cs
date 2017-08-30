@@ -117,8 +117,12 @@ public class Map : MonoBehaviour
             {
                 Vector3 position = Vector3.right * (x - (width - 1) / 2f) * size + Vector3.forward * (y - (height - 1) / 2f) * size;
 
-                GameObject newNodeGO = Instantiate(node, position, Quaternion.identity, m_Transform);
+                GameObject newNodeGO = Instantiate(node);
                 newNodeGO.name = "Node" + (x + y * width).ToString();
+				newNodeGO.transform.parent = m_Transform;
+				newNodeGO.transform.localPosition = position;
+				newNodeGO.transform.localRotation = Quaternion.identity;
+				newNodeGO.transform.localScale = Vector3.one;
 
                 Node newNode = newNodeGO.GetComponent<Node>();
                 newNode.isWalkable = false;

@@ -23,8 +23,6 @@ public class PointCloudParticleExample : MonoBehaviour {
     {
         m_PointCloudData = camera.pointCloudData;
         frameUpdated = true;
-
-		Debug.Log ("UPDATED" + m_PointCloudData.Length.ToString());
     }
 
 	// Update is called once per frame

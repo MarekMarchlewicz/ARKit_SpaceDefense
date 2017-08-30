@@ -15,9 +15,11 @@ public class Spawner : MonoBehaviour
 
 	private List<GameObject> spawnedAttackers = new List<GameObject>();
 
-	public void Spawn(Vector3 spawnPosition, Vector3 targetPosition, int waveSize, float delayBetweenWaves)
+	public void Spawn(Transform parentTransfrom, Vector3 spawnLocalPosition, Vector3 targetPosition, int waveSize, float delayBetweenWaves)
 	{
-		transform.position = spawnPosition;
+		transform.parent = parentTransfrom;
+		transform.position = spawnLocalPosition;
+		transform.localScale = Vector3.one;
 		targetAttackPosition = targetPosition;
 
 		spawnWaveSize = waveSize;
@@ -42,10 +44,12 @@ public class Spawner : MonoBehaviour
     {
 		for (int i = 0; i < spawnWaveSize; i++)
 		{
-			Vector3 randomPosition = Random.onUnitSphere * 0.5f;
+			Vector3 randomPosition = Vector3.zero;// Random.onUnitSphere * 0.5f;
 			randomPosition.y = 0f;
 
 			GameObject attackerGO = Instantiate (attackerPrefab, transform.position + randomPosition, Quaternion.identity);
+			attackerGO.transform.parent = transform;
+			attackerGO.transform.localScale = Vector3.one * 0.3f;
 
 			spawnedAttackers.Add (attackerGO);
 

@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
+using UnityEngine.XR.iOS;
 
 public enum GameMode
 {
@@ -26,14 +28,20 @@ public class GameManager : MonoBehaviour
 
 	[SerializeField] private GameObject addTurretButton;
 
+	[SerializeField] private GameMode gameMode;
+
+	public static GameMode GameMode { get { return instance.gameMode; } private set { instance.gameMode = value; } }
+
 	private Defender activeDefender;
 
-    private GameMode gameMode;
-    public static GameMode GameMode { get { return instance.gameMode; } private set { instance.gameMode = value; } }
+	private List<GameObject> activeTurrets = new List<GameObject>(MAX_TURRETS);
+	public int ActiveTurrets { get { return activeTurrets.Count; } }
+
+	public const int MAX_TURRETS = 5;
 
     private float timer;
 
-    private static GameManager instance;
+	public static GameManager instance;
 
     private void Awake()
     {
@@ -42,7 +50,7 @@ public class GameManager : MonoBehaviour
 
 	private void Start()
 	{
-		ChangeMode(GameMode.FindPlane);
+		ChangeMode(gameMode);
 	}
 
     public void ChangeMode(GameMode newGameMode)
@@ -67,13 +75,25 @@ public class GameManager : MonoBehaviour
 			break;
 		case GameMode.Playing:
 			UIManager.ShowMessage ("Start!", 1f);
-			attackerSpawner.Spawn (map.AttackersPosition, map.DefendersPosition, waveSize, delayBetweenSpawns);
-			activeDefender = Instantiate (defender, map.DefendersPosition + Vector3.up * 1.5f, Quaternion.identity).GetComponent<Defender> ();
+			attackerSpawner.Spawn (map.transform, map.AttackersPosition, map.DefendersPosition, waveSize, delayBetweenSpawns);
+			activeDefender = Instantiate (defender, map.DefendersPosition + Vector3.up * 0.3f, Quaternion.identity).GetComponent<Defender> ();
+
+			addTurretButton.SetActive (true);
 			break;
 		case GameMode.GameOver:
 			UIManager.ShowMessage ("Game Over!", 1f);
 			attackerSpawner.Stop ();
+
 			Destroy (activeDefender.gameObject);
+
+			for (int i = 0; i < activeTurrets.Count; i++) 
+			{
+				Destroy (activeTurrets [i]);
+			}
+
+			activeTurrets.Clear ();
+
+			addTurretButton.SetActive (false);
 			break;
 		}
     }
@@ -99,7 +119,36 @@ public class GameManager : MonoBehaviour
 
     private void UpdateFindPlane()
     {
-        ChangeMode(GameMode.GeneratingMap);
+		if (Input.touchCount > 0)
+		{
+			var touch = Input.GetTouch(0);
+			if (touch.phase == TouchPhase.Began)
+			{
+				var screenPosition = Camera.main.ScreenToViewportPoint(touch.position);
+				ARPoint point = new ARPoint {
+					x = screenPosition.x,
+					y = screenPosition.y
+				};
+
+				// prioritize reults types
+				ARHitTestResultType[] resultTypes = 
+				{
+					ARHitTestResultType.ARHitTestResultTypeExistingPlaneUsingExtent, 
+					// if you want to use infinite planes use this:
+					//ARHitTestResultType.ARHitTestResultTypeExistingPlane,
+					ARHitTestResultType.ARHitTestResultTypeHorizontalPlane, 
+					ARHitTestResultType.ARHitTestResultTypeFeaturePoint
+				}; 
+
+				foreach (ARHitTestResultType resultType in resultTypes)
+				{
+					if (HitTestWithResultType (point, resultType))
+					{
+						return;
+					}
+				}
+			}
+		}
     }
 
 
@@ -119,6 +168,11 @@ public class GameManager : MonoBehaviour
         {
             ChangeMode(GameMode.GameOver);
         }
+
+		if (activeTurrets.Count >= MAX_TURRETS) 
+		{
+			addTurretButton.SetActive (false);
+		}
     }
 
     private void UpdateGameOver()
@@ -126,8 +180,23 @@ public class GameManager : MonoBehaviour
         ChangeMode(GameMode.GeneratingMap);
     }
 
-	public void SpawnEnemies(GameObject enemy, int count, Transform spawnPoint)
+	private bool HitTestWithResultType (ARPoint point, ARHitTestResultType resultTypes)
 	{
-		Debug.Log (count);
+		List<ARHitTestResult> hitResults = UnityARSessionNativeInterface.GetARSessionNativeInterface ().HitTest (point, resultTypes);
+		if (hitResults.Count > 0) 
+		{
+			map.transform.position = UnityARMatrixOps.GetPosition(hitResults [0].worldTransform);
+			map.transform.rotation = UnityARMatrixOps.GetRotation (hitResults [0].worldTransform);
+
+			ChangeMode(GameMode.GeneratingMap);
+
+			return true;
+		}
+		return false;
+	}
+
+	public void AddTurret(GameObject newTurret)
+	{
+		activeTurrets.Add (newTurret);
 	}
 }

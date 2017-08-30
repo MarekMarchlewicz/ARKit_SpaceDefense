@@ -69,11 +69,11 @@ public class RobotAttacker : Attacker
 
     private void Aim()
     {
-        Vector3 delta = forceField.transform.position - m_Transform.position;
-        delta.y = 0f;
-        delta.Normalize();
+		Vector3 newRotation = Quaternion.LookRotation (forceField.transform.position - m_Transform.position).eulerAngles;
+		newRotation.x = 0f;
+		newRotation.z = 0f;
 
-        m_Transform.rotation = Quaternion.Lerp(m_Transform.rotation, Quaternion.Euler(delta), Time.deltaTime * 5f);
+		m_Transform.rotation = Quaternion.Lerp(m_Transform.rotation, Quaternion.Euler(newRotation), Time.deltaTime * 5f);
     }
 
     private void OnTriggerEnter(Collider collider)

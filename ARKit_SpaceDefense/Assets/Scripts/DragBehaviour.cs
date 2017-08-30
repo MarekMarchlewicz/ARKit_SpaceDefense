@@ -14,8 +14,7 @@ public class DragBehaviour : MonoBehaviour
     [SerializeField]
     private float speed = 5f;
 
-    [SerializeField]
-    private Vector3 positionOffset = Vector3.up * 0.5f;
+	public Vector3 positionOffset = Vector3.up * 0.001f;
 
     private const float defaultCameraDepth = 5f;
     
